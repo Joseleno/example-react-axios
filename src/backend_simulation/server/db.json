@@ -3,12 +3,12 @@
         {
             "id": 1,
             "name": "Gas",
-            "price": 1.00
+            "price": 1.15
         },
         {
             "id": 2,
             "name": "Premium Gasoline",
-            "price": 1.25
+            "price": 1.35
         },
         {
             "id": 3,
@@ -18,7 +18,7 @@
         {
             "id": 4,
             "name": "Diesel",
-            "price": 1.20
+            "price": 1.25
         }
     ]
 }
