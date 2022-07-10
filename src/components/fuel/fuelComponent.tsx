@@ -6,6 +6,7 @@ import {
   EditionText,
   FuelPrice,
   FuelText,
+  InputText,
   Panel,
   Row,
   SaveButton,
@@ -13,8 +14,8 @@ import {
   SettingsIcon,
   Title,
 } from "../../commun/css/styles";
-import { Fuel } from "../../types/fuel";
-import { getFuel } from "./fuelService";
+import { Fuel, FuelState } from "../../types/fuel";
+import { getFuel, updateFuel } from "./fuelService";
 
 type FuelComponentProps = {
   modeEdit: boolean;
@@ -25,7 +26,7 @@ export const FuelComponent = ({
   modeEdit,
   handlerChangeModeEdit,
 }: FuelComponentProps) => {
-  const [fuel, setFuel] = useState<Array<Fuel>>();
+  const [fuel, setFuel] = useState<FuelState[]>();
 
   async function updateFuelData() {
     const listFuel = await getFuel();
@@ -35,6 +36,36 @@ export const FuelComponent = ({
   useEffect(() => {
     updateFuelData();
   }, []);
+
+  function onUpdatePrice(id: number, price: string) {
+    const updatedFuel = fuel?.map((f) => {
+      if (f.id === id) {
+        f.price = Number(price);
+        f.updated = true;
+      }
+
+      return f;
+    });
+
+    setFuel(updatedFuel);
+  }
+
+  async function onSave() {
+    const changed = fuel?.filter((f) => f.updated);
+
+    if (!changed) {
+      handlerChangeModeEdit();
+      return;
+    }
+
+    for (const item of changed) {
+      const { updated, ...rest } = item;
+      await updateFuel(rest);
+    }
+
+    updateFuelData();
+    handlerChangeModeEdit();
+  }
 
   return (
     <Container>
@@ -52,7 +83,15 @@ export const FuelComponent = ({
               <FuelText>{item.name}</FuelText>
             </Box>
             <Box>
-              <FuelPrice>{item.price}</FuelPrice>
+              {modeEdit ? (
+                <InputText
+                  type="number"
+                  value={item.price}
+                  onChange={(e) => onUpdatePrice(item.id, e.target.value)}
+                />
+              ) : (
+                <FuelPrice>{item.price}</FuelPrice>
+              )}
             </Box>
           </Row>
         ))}
@@ -60,7 +99,7 @@ export const FuelComponent = ({
         {modeEdit && (
           <Row>
             {" "}
-            <SaveButton>
+            <SaveButton onClick={onSave}>
               <SaveIcon />
               <span>Save</span>
             </SaveButton>
