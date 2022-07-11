@@ -101,3 +101,14 @@ export const SaveIcon = styled(FiSave)`
     color: ${(props) => props.theme.colorWhite};
     font-size: 30px;
 `;
+
+export const InputText = styled.input`
+    color: ${(props) => props.theme.colorYellow};
+    font-family: "Digital-7 Mono", sans-serif;
+    font-size: 3.5rem;
+    text-align: right;
+    background: none;
+    border: none;
+    width: 100%;
+    padding: 0;
+`;

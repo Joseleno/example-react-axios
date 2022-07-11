@@ -3,3 +3,7 @@ export interface Fuel{
     name: string;
     price: number;
 }
+
+export type FuelState = Fuel & {
+    updated?: boolean;
+}
