@@ -37,6 +37,19 @@ export const FuelComponent = ({
     updateFuelData();
   }, []);
 
+  useEffect(() => {
+    if (modeEdit) {
+      return;
+    }
+    const intervalId = setInterval(() => {
+      updateFuelData();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [modeEdit]);
+
   function onUpdatePrice(id: number, price: string) {
     const updatedFuel = fuel?.map((f) => {
       if (f.id === id) {
@@ -53,7 +66,7 @@ export const FuelComponent = ({
   async function onSave() {
     const changed = fuel?.filter((f) => f.updated);
 
-    if (!changed) {
+    if (!changed || changed.length === 0) {
       handlerChangeModeEdit();
       return;
     }
